@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+    <body>
+        <h1>Resultado de búsqueda de productos</h1>
+
+        {% if articulos %}
+        <p>Articulos encontrados: {{articulos|length}} artículos</p>
+
+        <ul>
+            {% for articulo in articulos %}
+            <li>
+                {{articulo.nombre}} {{articulo.precio}}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>Artículo no encontrado</p>
+        {% endif %}
+    </body>
+</html>
