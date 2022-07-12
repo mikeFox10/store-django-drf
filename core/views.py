@@ -1,6 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import HttpResponse
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status, viewsets
+from core import serializers, models
 from core.models import Articulos
 from core.forms import FormularioContacto
 # Create your views here.
@@ -33,3 +37,53 @@ def contacto(request):
     else:
         miFormulario = FormularioContacto()
         return render(request, "contacto.html", {"form": miFormulario})
+
+
+class HelloApiView(APIView):
+    seralizer_class = serializers.HelloSerializer
+    def get(self, request, format=None):
+        an_apiview = [
+            'testing',
+            'APIVIEW - Mayor control de la logica de la APP'
+        ]
+        return Response({'message': 'OK', "respuesta": an_apiview })
+
+    def post(self, request):
+        serializer = self.seralizer_class(data=request.data)
+        if serializer.is_valid():
+            name = serializer.validated_data.get('name')
+            message = 'Hello ' + name
+            return Response({'message':message})
+        else:
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )
+    def put(self, request, pk=None):
+        return Response({'method' :" PUT"})
+
+class HelloViewSet(viewsets.ViewSet):
+    serializer_class = serializers.HelloSerializer
+
+    def list(self, request):
+        a_viewset = [
+            "VIEW SET Use acctions list. crate retrieve, update",
+            "menos control de la l'ogica"
+        ]
+        return Response({"mensaje": "OK", 'result': a_viewset})
+    
+    def create(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            name = serializer.validated_data.get('name')
+            message = 'Hello ' + name
+            return Response({'message':message})
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def retrieve(self, request, pk=None):
+        return Response({'message': 'GET'})
+
+class UserpProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.UserProfileSerializer
+    queryset = models.UserProfile.objects.all()
