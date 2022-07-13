@@ -10,4 +10,5 @@ class ArticulosAdmin(admin.ModelAdmin):
 
 # Register your models here.
 admin.site.register(models.UserProfile)
+admin.site.register(models.ProfileFeedItem)
 admin.site.register(Articulos, ArticulosAdmin)
